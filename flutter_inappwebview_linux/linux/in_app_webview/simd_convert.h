@@ -41,6 +41,19 @@ inline void ConvertARGB32ToRGBA(const uint8_t* src, uint8_t* dst, int width, int
                                 int src_stride) {
   const size_t dst_stride = static_cast<size_t>(width) * 4;
 
+  // Some WPE paths provide buffers with zero alpha for otherwise opaque
+  // pixels. Flutter treats alpha=0 as fully transparent, which shows up as
+  // black in the texture output. Keep parity with the scalar path by
+  // normalizing zero alpha to opaque.
+  auto normalize_zero_alpha = [](uint8_t* row, int row_width) {
+    for (int i = 0; i < row_width; i++) {
+      uint8_t* px = row + i * 4;
+      if (px[3] == 0) {
+        px[3] = 255;
+      }
+    }
+  };
+
 #if HAVE_NEON
   // ARM NEON optimized path
   // Process 8 pixels at a time
@@ -95,6 +108,8 @@ inline void ConvertARGB32ToRGBA(const uint8_t* src, uint8_t* dst, int width, int
       out[2] = b;
       out[3] = a == 0 ? 255 : a;  // Make fully transparent pixels opaque
     }
+
+    normalize_zero_alpha(dst_row, width);
   }
 
 #elif HAVE_SSSE3
@@ -139,6 +154,8 @@ inline void ConvertARGB32ToRGBA(const uint8_t* src, uint8_t* dst, int width, int
       out[2] = b;
       out[3] = a == 0 ? 255 : a;
     }
+
+    normalize_zero_alpha(dst_row, width);
   }
 
 #elif HAVE_SSE2
@@ -192,6 +209,8 @@ inline void ConvertARGB32ToRGBA(const uint8_t* src, uint8_t* dst, int width, int
       out[2] = b;
       out[3] = a == 0 ? 255 : a;
     }
+
+    normalize_zero_alpha(dst_row, width);
   }
 
 #else

@@ -14,11 +14,28 @@ namespace flutter_inappwebview_plugin {
 namespace {
 // Check if GL textures should be used (enabled by default, can be disabled)
 // Disable with FLUTTER_INAPPWEBVIEW_LINUX_DISABLE_GL=1 to force software rendering.
+// Force enable with FLUTTER_INAPPWEBVIEW_LINUX_FORCE_GL=1.
 bool UseGLTextureEnvOverride() {
-  if (g_getenv("FLUTTER_INAPPWEBVIEW_LINUX_DISABLE_GL") != nullptr) {
+  const char* force_gl = g_getenv("FLUTTER_INAPPWEBVIEW_LINUX_FORCE_GL");
+  if (force_gl != nullptr &&
+      (strcmp(force_gl, "1") == 0 || g_ascii_strcasecmp(force_gl, "true") == 0)) {
+    return true;
+  }
+
+  const char* disable_gl = g_getenv("FLUTTER_INAPPWEBVIEW_LINUX_DISABLE_GL");
+  if (disable_gl != nullptr) {
     return false;
   }
-  return true;
+
+  const char* force_sw = g_getenv("LIBGL_ALWAYS_SOFTWARE");
+  if (force_sw != nullptr &&
+      (strcmp(force_sw, "1") == 0 || g_ascii_strcasecmp(force_sw, "true") == 0)) {
+    return false;
+  }
+
+  // Default to software texture path. This avoids blank/black WebView output on
+  // some Linux driver/compositor combinations in GL texture mode.
+  return false;
 }
 
 // Check if OpenGL is actually available in the current GDK backend

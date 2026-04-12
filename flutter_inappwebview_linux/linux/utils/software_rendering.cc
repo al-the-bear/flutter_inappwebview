@@ -179,22 +179,18 @@ bool ShouldUseSoftwareRendering() {
 }
 
 bool ApplySoftwareRenderingIfNeeded() {
-  // Already set - nothing to do
-  const char* already_sw = getenv("LIBGL_ALWAYS_SOFTWARE");
-  if (already_sw && (strcmp(already_sw, "1") == 0 || strcasecmp(already_sw, "true") == 0)) {
-    debugLog("Software rendering already enabled (LIBGL_ALWAYS_SOFTWARE set)");
-    return true;
+  // Explicit opt-in for hardware mode.
+  const char* force_gl = getenv("FLUTTER_INAPPWEBVIEW_LINUX_FORCE_GL");
+  if (force_gl && (strcmp(force_gl, "1") == 0 || strcasecmp(force_gl, "true") == 0)) {
+    debugLog("FLUTTER_INAPPWEBVIEW_LINUX_FORCE_GL detected -> keeping hardware rendering");
+    return false;
   }
-  
-  if (ShouldUseSoftwareRendering()) {
-    // Set BEFORE any EGL/GL initialization
-    setenv("LIBGL_ALWAYS_SOFTWARE", "1", 0);  // Don't override if already set
-    debugLog("Auto-enabled software rendering for VM/problematic GPU environment");
-    return true;
-  }
-  
-  debugLog("Using hardware GPU rendering");
-  return false;
+
+  // Default Linux behavior: prefer software rendering for maximum compatibility
+  // with WPE composition across different drivers/compositors.
+  setenv("LIBGL_ALWAYS_SOFTWARE", "1", 1);
+  debugLog("Defaulting to software rendering (LIBGL_ALWAYS_SOFTWARE=1)");
+  return true;
 }
 
 }  // namespace flutter_inappwebview_plugin

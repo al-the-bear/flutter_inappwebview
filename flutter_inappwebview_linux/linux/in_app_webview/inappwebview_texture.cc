@@ -64,6 +64,14 @@ static gboolean inappwebview_texture_copy_pixels(FlPixelBufferTexture* texture,
     return TRUE;
   }
 
+  // Some Linux compositors/WPE paths can deliver valid RGB with zero alpha.
+  // Flutter treats alpha=0 as fully transparent, which appears as black.
+  // Normalize to opaque alpha in the pixel-buffer path.
+  const size_t pixel_count = static_cast<size_t>(buf_width) * static_cast<size_t>(buf_height);
+  for (size_t i = 0; i < pixel_count; i++) {
+    self->staging_buffer[i * 4 + 3] = 255;
+  }
+
   *out_buffer = self->staging_buffer;
   *width = buf_width;
   *height = buf_height;
