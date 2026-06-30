@@ -1,0 +1,11 @@
+# Skip this forked upstream during recursive buildkit scans.
+#
+# tom_flutter_inappwebview is a fork of the flutter_inappwebview monorepo
+# (flutter_inappwebview + per-platform federated packages). It is a pinned
+# third-party upstream, not a Tom-managed project, and must not be processed
+# during workspace-wide buildkit pipeline runs. Its many nested pubspecs would
+# otherwise be picked up by the recursive project scan.
+#
+# Presence of this file (not its contents) is the signal that excludes this
+# directory subtree. It is honoured for nested subtrees but ignored at the
+# scan root.
