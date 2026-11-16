@@ -256,16 +256,21 @@ unpack() {
 # LIBEXEC_INSTALL_DIR, ...) and the libwpe it found, so a new -DCMAKE_INSTALL_PREFIX
 # alone still installed the libraries into the old prefix (seen on bigbeast,
 # 00a_wslayout-4). A fresh configure rebuilds more, but cannot mix two prefixes.
+# The prefix a build folder was configured for is recorded in a stamp file
+# (CMAKE_INSTALL_PREFIX alone is not enough: an interrupted re-configure can
+# update it while the other cached paths keep the old prefix). A cache without
+# a matching stamp is configured fresh.
 fresh_if_prefix_changed() {
-  local cache="$1/CMakeCache.txt" cached
+  local cache="$1/CMakeCache.txt" stamp="$1/.build_wpe_prefix" cached=""
   [ -f "$cache" ] || return 0
-  cached="$(sed -n 's/^CMAKE_INSTALL_PREFIX:PATH=//p' "$cache")"
+  [ -f "$stamp" ] && cached="$(cat "$stamp")"
   if [ "$cached" != "$PREFIX" ]; then
-    echo "   $1 was configured for prefix '$cached': configuring fresh for $PREFIX"
+    echo "   $1 was configured for prefix '${cached:-unknown}': configuring fresh for $PREFIX"
     rm -f "$cache"
     rm -rf "$1/CMakeFiles"
   fi
 }
+stamp_prefix() { mkdir -p "$1"; printf '%s\n' "$PREFIX" > "$1/.build_wpe_prefix"; }
 
 step_build() {
   local jobs="${JOBS:-$(jobs_default)}" off
@@ -276,6 +281,7 @@ step_build() {
   fresh_if_prefix_changed "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build"
   cmake -S "$BUILD_DIR/libwpe-$LIBWPE_VERSION" -B "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build" -G Ninja \
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$PREFIX"
+  stamp_prefix "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build"
   ninja -C "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build" -j"$jobs"
   as_root ninja -C "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build" install
 
@@ -301,6 +307,7 @@ step_build() {
     -DENABLE_WPE_PLATFORM=ON \
     -DENABLE_WPE_PLATFORM_HEADLESS=ON \
     $off
+  stamp_prefix "$BUILD_DIR/wpewebkit-$WPE_VERSION/build"
   ninja -C "$BUILD_DIR/wpewebkit-$WPE_VERSION/build" -j"$jobs"
 }
 
