@@ -45,6 +45,44 @@ You can either:
 1. **Use pre-built packages** from your distribution (if available): https://wpewebkit.org/about/get-wpe.html
 2. **Build from source** using official tarball releases (recommended for latest features): https://wpewebkit.org/release/
 
+### Building with the script
+
+[`tool/build_wpe.sh`](tool/build_wpe.sh) does the build below in one run, so the
+steps by hand are only the reference. It runs these steps in order:
+
+1. **check:** it checks the Prerequisites packages (`dpkg`) and names what is
+   missing. It never installs anything: that needs `sudo` and a person.
+2. **download:** it downloads `libwpe` and `wpewebkit` from
+   `https://wpewebkit.org/releases/` and checks their SHA-256 sums.
+3. **build:** it builds libwpe and installs it into the prefix, because WPE WebKit
+   is configured against it. Then it builds WPE WebKit with the configuration
+   below (WPEPlatform, headless). Jobs default to `min(cores, RAM GB / 1.5)`.
+4. **install:** it installs into the prefix.
+5. **verify:** it checks `pkg-config --modversion` for `wpe-webkit-2.0`,
+   `wpe-platform-2.0` and `wpe-1.0`.
+
+WPEBackend-FDO is not built. An optional feature whose packages are missing is
+built `OFF`, and the check says which ones. It runs on Linux only, and only when a
+person starts it.
+
+```bash
+# Build and install into /usr/local (sudo for the install, then ldconfig)
+tool/build_wpe.sh
+
+# A test build into a prefix of your own (no sudo, no ldconfig),
+# then build an app against it
+tool/build_wpe.sh --prefix ~/wpe-test --verify-app path/to/your_flutter_app
+```
+
+The tarballs and the build trees go into the build folder: by default
+`tom_ai/xternal/wpe_webkit_build/` next to this fork in the Tom workspace, or
+`--build-dir <dir>`. Other options:
+- `--wpe` / `--libwpe <version>`: a version must have its checksum in the script's
+  table;
+- `--jobs <n>`;
+- `--steps check,download,build,install,verify`: run a part;
+- `--help`.
+
 ### Option 2: Build from Source
 
 #### Prerequisites
