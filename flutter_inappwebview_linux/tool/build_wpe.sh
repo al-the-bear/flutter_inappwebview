@@ -251,12 +251,29 @@ unpack() {
   touch "$marker"
 }
 
+# fresh_if_prefix_changed <build-folder>: drop a CMake cache made for another
+# install prefix. WebKit caches absolute install folders (LIB_INSTALL_DIR,
+# LIBEXEC_INSTALL_DIR, ...) and the libwpe it found, so a new -DCMAKE_INSTALL_PREFIX
+# alone still installed the libraries into the old prefix (seen on bigbeast,
+# 00a_wslayout-4). A fresh configure rebuilds more, but cannot mix two prefixes.
+fresh_if_prefix_changed() {
+  local cache="$1/CMakeCache.txt" cached
+  [ -f "$cache" ] || return 0
+  cached="$(sed -n 's/^CMAKE_INSTALL_PREFIX:PATH=//p' "$cache")"
+  if [ "$cached" != "$PREFIX" ]; then
+    echo "   $1 was configured for prefix '$cached': configuring fresh for $PREFIX"
+    rm -f "$cache"
+    rm -rf "$1/CMakeFiles"
+  fi
+}
+
 step_build() {
   local jobs="${JOBS:-$(jobs_default)}" off
   [ -f "$BUILD_DIR/$libwpe_tar" ] && [ -f "$BUILD_DIR/$wpe_tar" ] || die "tarballs missing in $BUILD_DIR - run the download step"
 
   say "build: libwpe $LIBWPE_VERSION (installed into $PREFIX: WPE WebKit is configured against it)"
   unpack "$libwpe_tar" "libwpe-$LIBWPE_VERSION"
+  fresh_if_prefix_changed "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build"
   cmake -S "$BUILD_DIR/libwpe-$LIBWPE_VERSION" -B "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build" -G Ninja \
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$PREFIX"
   ninja -C "$BUILD_DIR/libwpe-$LIBWPE_VERSION/build" -j"$jobs"
@@ -264,6 +281,7 @@ step_build() {
 
   say "build: WPE WebKit $WPE_VERSION with $jobs job(s)"
   unpack "$wpe_tar" "wpewebkit-$WPE_VERSION"
+  fresh_if_prefix_changed "$BUILD_DIR/wpewebkit-$WPE_VERSION/build"
   off="$(optional_off_flags | tr '\n' ' ')"
   [ -n "$off" ] && echo "   optional features built OFF (missing packages): $off"
   # shellcheck disable=SC2086 # $off is a list of -D options
