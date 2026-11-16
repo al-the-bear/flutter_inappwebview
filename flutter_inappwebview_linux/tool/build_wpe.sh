@@ -70,7 +70,7 @@ OPTIONAL_FEATURES=(
   "USE_ATK:libatk1.0-dev libatk-bridge2.0-dev"
   "USE_GBM:libgbm-dev"
   "USE_LIBDRM:libdrm-dev"
-  "USE_LIBBACKTRACE:libbacktrace-dev"
+  "USE_LIBBACKTRACE:libbacktrace-dev"     # not in Ubuntu 24.04's archive: OFF there
   "ENABLE_SPEECH_SYNTHESIS:flite1-dev"
   "ENABLE_XSLT:libxslt1-dev"
   "ENABLE_JOURNALD_LOG:libsystemd-dev"
