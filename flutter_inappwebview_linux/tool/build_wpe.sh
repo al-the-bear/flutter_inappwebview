@@ -235,13 +235,20 @@ fetch() {   # fetch <file>: download into the build folder unless there, then ch
   echo "   sha256 $got OK"
 }
 
-unpack() {  # unpack <file> <dir>: extract unless the source folder is there
-  local file="$1" dir="$2"
-  if [ -d "$BUILD_DIR/$dir" ]; then
+# unpack <file> <dir>: extract the (checksummed) tarball unless this script
+# unpacked it before (a marker file). A folder without the marker is unpacked
+# over: in the Tom workspace it held a copy of the sources from git, where an
+# ignore rule for `build/` had dropped files such as
+# Source/ThirdParty/pdfjs/build/pdf.mjs, and the build failed on it.
+unpack() {
+  local file="$1" dir="$2" marker="$BUILD_DIR/$2/.unpacked-by-build_wpe"
+  if [ -f "$marker" ]; then
     echo "   $dir already unpacked"
-  else
-    tar -C "$BUILD_DIR" -xf "$BUILD_DIR/$file"
+    return
   fi
+  [ -d "$BUILD_DIR/$dir" ] && echo "   $dir exists but was not unpacked by this script: unpacking $file over it"
+  tar -C "$BUILD_DIR" -xf "$BUILD_DIR/$file"
+  touch "$marker"
 }
 
 step_build() {
