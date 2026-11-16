@@ -76,6 +76,12 @@ OPTIONAL_FEATURES=(
   "ENABLE_JOURNALD_LOG:libsystemd-dev"
   "ENABLE_BUBBLEWRAP_SANDBOX:bubblewrap xdg-dbus-proxy libseccomp-dev"
   "ENABLE_GAMEPAD:libmanette-0.2-dev"
+  # On by default in WPE 2.50 (OptionsWPE.cmake), although WPE_BACKEND.md's table
+  # once said OFF: the DRM and Wayland platforms beside the headless one this
+  # plugin uses, and the system sysprof capture library (bundled copy when OFF).
+  "ENABLE_WPE_PLATFORM_DRM:libinput-dev libudev-dev libgbm-dev"
+  "ENABLE_WPE_PLATFORM_WAYLAND:libwayland-dev wayland-protocols"
+  "USE_SYSTEM_SYSPROF_CAPTURE:libsysprof-capture-4-dev"
 )
 
 usage() {

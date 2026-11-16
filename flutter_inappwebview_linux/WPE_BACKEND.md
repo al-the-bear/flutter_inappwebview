@@ -170,6 +170,9 @@ WPE WebKit has many optional features that are **enabled by default**. If you do
 | `ENABLE_GAMEPAD` | ON | 0.2.4 | `libmanette-0.2-dev` | Gamepad/controller support |
 | `ENABLE_MEDIA_STREAM` | ON | — | GStreamer plugins | Camera/microphone access |
 | `USE_GSTREAMER_WEBRTC` | OFF | — | `gstreamer1.0-plugins-bad` | GStreamer-based WebRTC |
+| `ENABLE_WPE_PLATFORM_DRM` | ON (2.50) | 1.19.0 (libinput) | `libinput-dev libudev-dev libdrm-dev libgbm-dev` | DRM/KMS platform (requires `USE_GBM`) |
+| `ENABLE_WPE_PLATFORM_WAYLAND` | ON (2.50) | 1.20 (wayland) | `libwayland-dev wayland-protocols` | Wayland platform |
+| `USE_SYSTEM_SYSPROF_CAPTURE` | ON | — | `libsysprof-capture-4-dev` | System sysprof capture (a bundled copy is used when OFF) |
 
 ##### Features Disabled by Default (Experimental/Advanced)
 
@@ -178,8 +181,6 @@ WPE WebKit has many optional features that are **enabled by default**. If you do
 | `ENABLE_WPE_PLATFORM` | OFF | See platform flags below | WPE 2.0 platform abstraction (**required for this plugin**, ⚠️ see note) |
 | `ENABLE_WPE_PLATFORM_HEADLESS` | OFF | See platform flags below | Headless platform (**required for this plugin**, ⚠️ see note) |
 | `ENABLE_ENCRYPTED_MEDIA` | OFF | Thunder/OCDM | Encrypted Media Extensions (EME/DRM) |
-| `ENABLE_WPE_PLATFORM_DRM` | OFF | `libinput-dev libudev-dev libdrm-dev libgbm-dev` | DRM/KMS platform (requires `USE_GBM`) |
-| `ENABLE_WPE_PLATFORM_WAYLAND` | OFF | `libwayland-dev wayland-protocols` | Wayland platform |
 | `ENABLE_WPE_QT_API` | OFF | Qt5/Qt6 development packages | Qt/QML API bindings |
 | `USE_QT6` | OFF | `qt6-base-dev qt6-declarative-dev` | Use Qt6 instead of Qt5 (requires `ENABLE_WPE_PLATFORM`) |
 | `ENABLE_WPE_1_1_API` | OFF | — | Build WPE 1.1 API instead of 2.0 |
