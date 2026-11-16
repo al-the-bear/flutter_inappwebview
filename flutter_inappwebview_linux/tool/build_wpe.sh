@@ -242,7 +242,9 @@ fetch() {   # fetch <file>: download into the build folder unless there, then ch
 # Source/ThirdParty/pdfjs/build/pdf.mjs, and the build failed on it.
 unpack() {
   local file="$1" dir="$2" marker="$BUILD_DIR/$2/.unpacked-by-build_wpe"
-  if [ -f "$marker" ]; then
+  # The marker counts only while the sources are there: a pull that untracks
+  # them deletes the files but leaves the (untracked) marker behind.
+  if [ -f "$marker" ] && [ -f "$BUILD_DIR/$dir/CMakeLists.txt" ]; then
     echo "   $dir already unpacked"
     return
   fi
