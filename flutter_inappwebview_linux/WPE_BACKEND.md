@@ -518,8 +518,14 @@ built against.** WebKit runs each page in helper processes (`WPEWebProcess`,
 WPE build starts them only from that compiled-in path: the `WEBKIT_EXEC_PATH`
 override and the lookup next to the executable exist only in WPE builds with
 `ENABLE_DEVELOPER_MODE` (`Source/WebKit/Shared/glib/ProcessExecutablePathGLib.cpp`).
-The helpers are therefore not bundled. Without them the app starts, with its
-bundled libraries, but a web view cannot load a page. The bundled libraries
+The helpers are therefore not bundled. They load `libWPEWebKit-2.0.so.1` and
+`libwpe-1.0.so.1` the usual way (no RUNPATH). Without them, or without those
+libraries on the system, the app starts with its bundled libraries, but the
+first page load fails: the helper cannot start (`error while loading shared
+libraries: libWPEWebKit-2.0.so.1`) and WebKit aborts the app
+(`readPIDFromPeer: Unexpected short read from PID socket`). Where only the
+libraries are missing, `LD_LIBRARY_PATH=<bundle>/lib` lets the helpers take the
+bundled copies. The bundled libraries
 keep the app on the WPE version it was built with, even where another WPE is
 installed elsewhere on the system.
 
