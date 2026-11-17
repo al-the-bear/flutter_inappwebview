@@ -298,7 +298,15 @@ endif()
 
 set(WPE_BUNDLED_LIBS "")
 
-# Helper function to find and add real shared library files (resolving symlinks)
+# Helper function: find a WPE library, resolve its symlinks, and stage a copy
+# named by its SONAME (e.g. libWPEWebKit-2.0.so.1) for the bundle.
+#
+# The plugin library NEEDs the SONAME and has RUNPATH $ORIGIN, so the bundle's
+# lib/ must hold a file of exactly that name. Bundling the file under its full
+# version name (libWPEWebKit-2.0.so.1.6.9) left the SONAME unresolved in the
+# bundle, and the loader took a system WPE instead (or failed without one).
+# A copy under the SONAME needs no symlink created at install time, so it does
+# not depend on the order in which the app's and the plugin's install rules run.
 function(find_and_add_library LIB_NAME SEARCH_PATHS OUT_LIST)
   foreach(SEARCH_PATH ${SEARCH_PATHS})
     # Look for the versioned .so file (e.g., libwpe-1.0.so.1.10.0)
@@ -313,9 +321,24 @@ function(find_and_add_library LIB_NAME SEARCH_PATHS OUT_LIST)
       # Resolve symlinks to get the real file
       get_filename_component(REAL_LIB "${LIB_FILE}" REALPATH)
       if(EXISTS "${REAL_LIB}")
-        list(APPEND ${OUT_LIST} "${REAL_LIB}")
+        # The SONAME, from the ELF dynamic section; else <name>.so.<major>.
+        set(LIB_SONAME "")
+        find_program(WPE_OBJDUMP NAMES objdump)
+        if(WPE_OBJDUMP)
+          execute_process(COMMAND "${WPE_OBJDUMP}" -p "${REAL_LIB}"
+            OUTPUT_VARIABLE OBJDUMP_OUT ERROR_QUIET)
+          string(REGEX MATCH "SONAME[ \t]+([^ \t\r\n]+)" _ "${OBJDUMP_OUT}")
+          set(LIB_SONAME "${CMAKE_MATCH_1}")
+        endif()
+        if(NOT LIB_SONAME)
+          get_filename_component(REAL_NAME "${REAL_LIB}" NAME)
+          string(REGEX REPLACE "^(.*\\.so\\.[0-9]+).*$" "\\1" LIB_SONAME "${REAL_NAME}")
+        endif()
+        set(STAGED_LIB "${CMAKE_CURRENT_BINARY_DIR}/wpe_bundle/${LIB_SONAME}")
+        configure_file("${REAL_LIB}" "${STAGED_LIB}" COPYONLY)
+        list(APPEND ${OUT_LIST} "${STAGED_LIB}")
         set(${OUT_LIST} ${${OUT_LIST}} PARENT_SCOPE)
-        message(STATUS "flutter_inappwebview_linux: Will bundle ${REAL_LIB}")
+        message(STATUS "flutter_inappwebview_linux: Will bundle ${REAL_LIB} as ${LIB_SONAME}")
         return()
       endif()
     endif()
@@ -357,8 +380,11 @@ if(HAVE_WPE_FDO)
   find_and_add_library("libWPEBackend-fdo-1.0" "${WPE_LIB_DIRS}" WPE_BUNDLED_LIBS)
 endif()
 
-# Also need to create symlinks for the sonames that the libraries expect
-# This will be handled at install time in the example CMakeLists.txt
+# Each library is bundled under its SONAME (see find_and_add_library), so the
+# bundle resolves it through RUNPATH $ORIGIN without symlinks. WPE's helper
+# processes (WPEWebProcess, WPENetworkProcess) are not bundled: a release WPE
+# build starts them only from the libexec path compiled into it, so the target
+# machine needs WPE installed at the prefix it was built against (WPE_BACKEND.md).
 
 set(flutter_inappwebview_linux_bundled_libraries
   ${WPE_BUNDLED_LIBS}

@@ -466,8 +466,10 @@ export PKG_CONFIG_PATH=$WPE_PREFIX/lib/pkgconfig:$WPE_PREFIX/lib/$(uname -m)-lin
 The plugin automatically detects WPE libraries via pkg-config. When WPE is found, it:
 
 1. **Compiles with the WPE backend**
-2. **Bundles WPE libraries** into the Flutter app's `lib/` directory
-3. **Creates necessary symlinks** so the app runs without `LD_LIBRARY_PATH`
+2. **Bundles WPE libraries** into the Flutter app's `lib/` directory, each
+   under its SONAME (`libWPEWebKit-2.0.so.1`, `libwpe-1.0.so.1`): the plugin
+   library loads them through its RUNPATH `$ORIGIN`, so the app finds its own
+   copies without `LD_LIBRARY_PATH` and without symlinks
 
 ### Build Your App
 
@@ -484,8 +486,8 @@ During build, you should see messages indicating which backend is being used:
 -- flutter_inappwebview_linux: Found wpe-webkit-2.0 (2.50.4)
 -- flutter_inappwebview_linux: Found wpe-platform-2.0 (WPEPlatform API - DEFAULT)
 -- flutter_inappwebview_linux: Found wpe-platform-headless-2.0
--- flutter_inappwebview_linux: Will bundle /usr/local/lib/libWPEWebKit-2.0.so.1.6.9
--- flutter_inappwebview_linux: Will bundle /usr/local/lib/libwpe-1.0.so.1.10.0
+-- flutter_inappwebview_linux: Will bundle /usr/local/lib/libWPEWebKit-2.0.so.1.6.9 as libWPEWebKit-2.0.so.1
+-- flutter_inappwebview_linux: Will bundle /usr/local/lib/libwpe-1.0.so.1.10.0 as libwpe-1.0.so.1
 ```
 
 **With WPEBackend-FDO (legacy fallback):**
@@ -493,14 +495,14 @@ During build, you should see messages indicating which backend is being used:
 -- flutter_inappwebview_linux: Using WPE WebKit backend
 -- flutter_inappwebview_linux: Found wpe-webkit-2.0 (2.50.4)
 -- flutter_inappwebview_linux: Found wpebackend-fdo-1.0 (Legacy FDO API)
--- flutter_inappwebview_linux: Will bundle /usr/local/lib/libWPEWebKit-2.0.so.1.6.9
--- flutter_inappwebview_linux: Will bundle /usr/local/lib/libwpe-1.0.so.1.10.0
--- flutter_inappwebview_linux: Will bundle /usr/local/lib/.../libWPEBackend-fdo-1.0.so.1.11.0
+-- flutter_inappwebview_linux: Will bundle /usr/local/lib/libWPEWebKit-2.0.so.1.6.9 as libWPEWebKit-2.0.so.1
+-- flutter_inappwebview_linux: Will bundle /usr/local/lib/libwpe-1.0.so.1.10.0 as libwpe-1.0.so.1
+-- flutter_inappwebview_linux: Will bundle /usr/local/lib/.../libWPEBackend-fdo-1.0.so.1.11.0 as libWPEBackend-fdo-1.0.so.1
 ```
 
 ### Run Your App
 
-The built app includes all WPE libraries bundled in the `lib/` directory and can be run directly:
+The built app includes the WPE libraries in its `lib/` directory and can be run directly:
 
 ```bash
 # x64 architecture
@@ -510,20 +512,35 @@ The built app includes all WPE libraries bundled in the `lib/` directory and can
 ./build/linux/arm64/release/bundle/your_app
 ```
 
+**The target machine still needs WPE installed at the prefix the app was
+built against.** WebKit runs each page in helper processes (`WPEWebProcess`,
+`WPENetworkProcess`, in `<prefix>/libexec/wpe-webkit-2.0/`), and a release
+WPE build starts them only from that compiled-in path: the `WEBKIT_EXEC_PATH`
+override and the lookup next to the executable exist only in WPE builds with
+`ENABLE_DEVELOPER_MODE` (`Source/WebKit/Shared/glib/ProcessExecutablePathGLib.cpp`).
+The helpers are therefore not bundled. Without them the app starts, with its
+bundled libraries, but a web view cannot load a page. The bundled libraries
+keep the app on the WPE version it was built with, even where another WPE is
+installed elsewhere on the system.
+
 ### What Gets Bundled
 
-The following files are automatically copied to your app's `lib/` directory:
+The following files are automatically copied to your app's `lib/` directory,
+each under its SONAME:
 
 **Always bundled:**
-- `libWPEWebKit-2.0.so.*` - WPE WebKit library (~160MB)
-- `libwpe-1.0.so.*` - libwpe library
+- `libWPEWebKit-2.0.so.1` - WPE WebKit library (~160MB)
+- `libwpe-1.0.so.1` - libwpe library
 
 **With WPEPlatform (default):**
 - WPEPlatform is built into `libWPEWebKit-2.0.so`, so no additional libraries are needed.
 
 **With WPEBackend-FDO (legacy):**
-- `libWPEBackend-fdo-1.0.so.*` - FDO backend library
-- `libWPEBackend-default.so` - Symlink to FDO backend
+- `libWPEBackend-fdo-1.0.so.1` - FDO backend library
+- no `libWPEBackend-default.so`: the plugin loads the bundled
+  `lib/libWPEBackend-fdo-1.0.so.1` by its full path (`wpe_loader_init`, and
+  `WPE_BACKEND_LIBRARY` for the child processes), and falls back to the
+  system's FDO backend only when the bundle has none
 
 ## Architecture
 
@@ -595,7 +612,8 @@ sudo ln -sf /usr/local/lib/$(uname -m)-linux-gnu/libWPEBackend-fdo-1.0.so.1 \
   /usr/local/lib/libWPEBackend-default.so
 ```
 
-Or for the bundled app, ensure the symlink exists in the `lib/` directory.
+A bundled app does not need it: the plugin loads the bundle's
+`lib/libWPEBackend-fdo-1.0.so.1` by its full path.
 
 ### Build errors for WPE WebKit
 
