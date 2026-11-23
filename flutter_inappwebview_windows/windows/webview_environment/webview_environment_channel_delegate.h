@@ -3,9 +3,9 @@
 
 #include <flutter/method_channel.h>
 
-#include "../types/browser_process_exited_detail.h"
-#include "../types/browser_process_infos_changed_detail.h"
-#include "../types/channel_delegate.h"
+#include "types/browser_process_exited_detail.h"
+#include "types/browser_process_infos_changed_detail.h"
+#include "types/channel_delegate.h"
 
 namespace flutter_inappwebview_plugin
 {

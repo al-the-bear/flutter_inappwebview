@@ -5,8 +5,8 @@
 #include <optional>
 #include <string>
 
-#include "../flutter_inappwebview_windows_plugin.h"
-#include "../types/custom_scheme_registration.h"
+#include "flutter_inappwebview_windows_plugin.h"
+#include "types/custom_scheme_registration.h"
 
 namespace flutter_inappwebview_plugin
 {

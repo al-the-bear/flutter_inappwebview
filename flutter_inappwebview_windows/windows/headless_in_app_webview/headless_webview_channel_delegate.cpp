@@ -1,7 +1,7 @@
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/strconv.h"
-#include "../utils/string.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/strconv.h"
+#include "utils/string.h"
 #include "headless_in_app_webview.h"
 #include "headless_webview_channel_delegate.h"
 

@@ -6,7 +6,7 @@
 #include <WebView2.h>
 #include <wil/com.h>
 
-#include "../types/frame_info.h"
+#include "types/frame_info.h"
 
 namespace flutter_inappwebview_plugin
 {

@@ -6,8 +6,8 @@
 #include <map>
 #include <string>
 
-#include "../flutter_inappwebview_windows_plugin.h"
-#include "../types/channel_delegate.h"
+#include "flutter_inappwebview_windows_plugin.h"
+#include "types/channel_delegate.h"
 #include "in_app_browser.h"
 
 namespace flutter_inappwebview_plugin

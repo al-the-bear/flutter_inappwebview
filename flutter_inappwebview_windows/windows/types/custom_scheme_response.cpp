@@ -1,5 +1,5 @@
-#include "../utils/flutter.h"
-#include "../utils/string.h"
+#include "utils/flutter.h"
+#include "utils/string.h"
 #include "custom_scheme_response.h"
 
 #include <Shlwapi.h>

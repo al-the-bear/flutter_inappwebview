@@ -4,7 +4,7 @@
 #include <flutter/method_channel.h>
 #include <flutter/standard_message_codec.h>
 
-#include "../types/channel_delegate.h"
+#include "types/channel_delegate.h"
 
 namespace flutter_inappwebview_plugin
 {

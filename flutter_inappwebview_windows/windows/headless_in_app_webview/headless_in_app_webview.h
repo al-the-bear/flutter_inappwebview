@@ -1,9 +1,9 @@
 #ifndef FLUTTER_INAPPWEBVIEW_PLUGIN_HEADLESS_IN_APP_WEBVIEW_H_
 #define FLUTTER_INAPPWEBVIEW_PLUGIN_HEADLESS_IN_APP_WEBVIEW_H_
 
-#include "../flutter_inappwebview_windows_plugin.h"
-#include "../in_app_webview/in_app_webview.h"
-#include "../types/size_2d.h"
+#include "flutter_inappwebview_windows_plugin.h"
+#include "in_app_webview/in_app_webview.h"
+#include "types/size_2d.h"
 #include "headless_webview_channel_delegate.h"
 
 namespace flutter_inappwebview_plugin

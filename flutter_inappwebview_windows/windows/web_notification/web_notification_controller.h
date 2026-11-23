@@ -11,7 +11,7 @@
 #include <optional>
 #include <string>
 
-#include "../types/web_notification.h"
+#include "types/web_notification.h"
 
 namespace flutter_inappwebview_plugin
 {

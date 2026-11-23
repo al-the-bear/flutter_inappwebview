@@ -4,9 +4,9 @@
 #include <memory>
 #include <string>
 
-#include "../types/plugin_script.h"
-#include "../utils/log.h"
-#include "../utils/string.h"
+#include "types/plugin_script.h"
+#include "utils/log.h"
+#include "utils/string.h"
 
 namespace flutter_inappwebview_plugin
 {

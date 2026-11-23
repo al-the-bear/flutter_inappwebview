@@ -1,8 +1,8 @@
 #include <Windows.h>
 
-#include "../utils/log.h"
-#include "../utils/strconv.h"
-#include "../webview_environment/webview_environment_manager.h"
+#include "utils/log.h"
+#include "utils/strconv.h"
+#include "webview_environment/webview_environment_manager.h"
 #include "in_app_browser.h"
 #include "in_app_browser_manager.h"
 

@@ -1,5 +1,5 @@
-#include "../utils/flutter.h"
-#include "../utils/strconv.h"
+#include "utils/flutter.h"
+#include "utils/strconv.h"
 #include "web_resource_response.h"
 
 #include <Shlwapi.h>

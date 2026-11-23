@@ -1,7 +1,7 @@
 #ifndef FLUTTER_INAPPWEBVIEW_PLUGIN_HEADLESS_WEBVIEW_CHANNEL_DELEGATE_H_
 #define FLUTTER_INAPPWEBVIEW_PLUGIN_HEADLESS_WEBVIEW_CHANNEL_DELEGATE_H_
 
-#include "../types/channel_delegate.h"
+#include "types/channel_delegate.h"
 #include <flutter/method_channel.h>
 
 namespace flutter_inappwebview_plugin

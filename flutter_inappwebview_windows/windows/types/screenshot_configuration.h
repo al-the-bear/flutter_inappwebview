@@ -5,8 +5,8 @@
 #include <optional>
 #include <string>
 
-#include "../types/rect.h"
-#include "../utils/string.h"
+#include "types/rect.h"
+#include "utils/string.h"
 
 namespace flutter_inappwebview_plugin
 {

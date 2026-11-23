@@ -1,7 +1,7 @@
 #include <flutter/method_channel.h>
 #include <flutter/standard_method_codec.h>
 
-#include "../utils/util.h"
+#include "utils/util.h"
 #include "channel_delegate.h"
 
 namespace flutter_inappwebview_plugin

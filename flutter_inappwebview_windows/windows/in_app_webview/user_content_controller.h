@@ -5,12 +5,12 @@
 #include <map>
 #include <vector>
 
-#include "../plugin_scripts_js/javascript_bridge_js.h"
-#include "../plugin_scripts_js/javascript_bridge_js.h"
-#include "../plugin_scripts_js/plugin_scripts_util.h"
-#include "../types/content_world.h"
-#include "../types/plugin_script.h"
-#include "../types/user_script.h"
+#include "plugin_scripts_js/javascript_bridge_js.h"
+#include "plugin_scripts_js/javascript_bridge_js.h"
+#include "plugin_scripts_js/plugin_scripts_util.h"
+#include "types/content_world.h"
+#include "types/plugin_script.h"
+#include "types/user_script.h"
 
 namespace flutter_inappwebview_plugin
 {

@@ -1,7 +1,7 @@
 #include <WebView2EnvironmentOptions.h>
 #include <wil/wrl.h>
 
-#include "../utils/log.h"
+#include "utils/log.h"
 #include "webview_environment.h"
 
 #include "webview_environment_manager.h"

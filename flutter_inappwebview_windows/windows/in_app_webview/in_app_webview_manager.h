@@ -9,12 +9,12 @@
 #include <wil/com.h>
 #include <winrt/base.h>
 
-#include "../custom_platform_view/custom_platform_view.h"
-#include "../custom_platform_view/graphics_context.h"
-#include "../custom_platform_view/util/rohelper.h"
-#include "../flutter_inappwebview_windows_plugin.h"
-#include "../types/channel_delegate.h"
-#include "../types/new_window_requested_args.h"
+#include "custom_platform_view/custom_platform_view.h"
+#include "custom_platform_view/graphics_context.h"
+#include "custom_platform_view/util/rohelper.h"
+#include "flutter_inappwebview_windows_plugin.h"
+#include "types/channel_delegate.h"
+#include "types/new_window_requested_args.h"
 #include "windows.ui.composition.h"
 
 namespace flutter_inappwebview_plugin

@@ -4,7 +4,7 @@
 #include <flutter/standard_method_codec.h>
 #include <string>
 
-#include "../utils/flutter.h"
+#include "utils/flutter.h"
 
 namespace flutter_inappwebview_plugin
 {

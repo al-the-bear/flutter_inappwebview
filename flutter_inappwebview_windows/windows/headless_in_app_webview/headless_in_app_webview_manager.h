@@ -7,8 +7,8 @@
 #include <wil/com.h>
 #include <winrt/base.h>
 
-#include "../flutter_inappwebview_windows_plugin.h"
-#include "../types/channel_delegate.h"
+#include "flutter_inappwebview_windows_plugin.h"
+#include "types/channel_delegate.h"
 #include "headless_in_app_webview.h"
 
 namespace flutter_inappwebview_plugin

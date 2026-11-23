@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "../in_app_webview/in_app_webview.h"
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/string.h"
+#include "in_app_webview/in_app_webview.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/string.h"
 #include "web_message_listener.h"
 
 namespace flutter_inappwebview_plugin {

@@ -29,7 +29,7 @@ windows/
 ├── CMakeLists.txt                              # CMake build config (fetches WebView2 NuGet)
 ├── flutter_inappwebview_windows_plugin.cpp     # Plugin entry point
 ├── flutter_inappwebview_windows_plugin.h
-├── flutter_inappwebview_windows_plugin_c_api.cpp  # C API wrapper
+├── in_app_web_view_c_api.cpp                  # C API wrapper (header include/flutter_inappwebview_windows/in_app_web_view_c_api.h)
 │
 ├── cookie_manager.cpp/h                        # ICoreWebView2CookieManager wrapper
 ├── platform_util.cpp/h                         # Platform utilities
@@ -351,7 +351,15 @@ For Dart-only changes:
 When modifying C++ code:
 - Located in `windows/`
 - **Prefer standard C++17** over Windows-specific APIs for maintainability
-- Plugin class: `FlutterInappwebviewWindowsPluginCApi`
+- Plugin class: `InAppWebViewCApi` (`pluginClass` in pubspec.yaml; Flutter's
+  registrant includes `<flutter_inappwebview_windows/in_app_web_view_c_api.h>`
+  and calls `InAppWebViewCApiRegisterWithRegistrar`). Short on purpose:
+  MSVC's `cl.exe` opens at most 259 characters, and an app's copy of the
+  plugin sits deep under `windows/flutter/ephemeral/.plugin_symlinks/`.
+- Include the plugin's own headers from the `windows/` folder
+  (`#include "utils/log.h"`, never `"../utils/log.h"`): it is on the
+  target's include path, and a `..` segment lengthens the path the compiler
+  opens.
 - Uses Flutter texture for rendering WebView2 content
 
 ## Build Commands

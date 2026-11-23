@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../utils/flutter.h"
+#include "utils/flutter.h"
 #include "text_direction_kind.h"
 
 namespace flutter_inappwebview_plugin

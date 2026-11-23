@@ -1,5 +1,5 @@
-#include "../utils/flutter.h"
-#include "../utils/log.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
 #include "web_resource_request.h"
 
 namespace flutter_inappwebview_plugin

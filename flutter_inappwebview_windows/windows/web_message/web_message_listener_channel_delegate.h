@@ -5,7 +5,7 @@
 
 #include <flutter/encodable_value.h>
 
-#include "../types/channel_delegate.h"
+#include "types/channel_delegate.h"
 
 namespace flutter_inappwebview_plugin {
 

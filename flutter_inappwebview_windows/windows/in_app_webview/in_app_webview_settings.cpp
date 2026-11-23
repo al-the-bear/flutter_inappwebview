@@ -1,5 +1,5 @@
-#include "../utils/flutter.h"
-#include "../utils/log.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
 #include "in_app_webview.h"
 #include "in_app_webview_settings.h"
 

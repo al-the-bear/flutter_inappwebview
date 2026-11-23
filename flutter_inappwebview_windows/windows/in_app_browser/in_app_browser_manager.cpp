@@ -2,13 +2,13 @@
 #include <flutter/standard_method_codec.h>
 #include <windows.h>
 
-#include "../in_app_webview/in_app_webview_settings.h"
-#include "../types/url_request.h"
-#include "../types/user_script.h"
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/string.h"
-#include "../utils/vector.h"
+#include "in_app_webview/in_app_webview_settings.h"
+#include "types/url_request.h"
+#include "types/user_script.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/string.h"
+#include "utils/vector.h"
 #include "in_app_browser_manager.h"
 #include "in_app_browser_settings.h"
 

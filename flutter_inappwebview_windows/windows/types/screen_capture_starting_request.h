@@ -5,7 +5,7 @@
 #include <memory>
 #include <optional>
 
-#include "../utils/flutter.h"
+#include "utils/flutter.h"
 #include "frame_info.h"
 
 namespace flutter_inappwebview_plugin

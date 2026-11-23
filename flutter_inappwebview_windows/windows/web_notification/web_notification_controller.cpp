@@ -1,13 +1,13 @@
 #include "web_notification_controller.h"
 
 #include "web_notification_channel_delegate.h"
-#include "../in_app_webview/in_app_webview.h"
+#include "in_app_webview/in_app_webview.h"
 
 #include <wil/wrl.h>
 
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/strconv.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/strconv.h"
 
 namespace flutter_inappwebview_plugin
 {

@@ -1,5 +1,5 @@
-#include "../utils/flutter.h"
-#include "../utils/string.h"
+#include "utils/flutter.h"
+#include "utils/string.h"
 #include "javascript_handler_function_data.h"
 
 namespace flutter_inappwebview_plugin

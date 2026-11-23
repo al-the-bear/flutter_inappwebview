@@ -252,8 +252,8 @@ list(APPEND PLUGIN_SOURCES
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} SHARED
-  "include/flutter_inappwebview_windows/flutter_inappwebview_windows_plugin_c_api.h"
-  "flutter_inappwebview_windows_plugin_c_api.cpp"
+  "include/flutter_inappwebview_windows/in_app_web_view_c_api.h"
+  "in_app_web_view_c_api.cpp"
   ${PLUGIN_SOURCES}
 )
 
@@ -314,6 +314,28 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 # dependencies here.
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
+# The plugin's own headers are included from this folder ("utils/log.h", never
+# "../utils/log.h"): MSVC's cl.exe opens at most 259 characters, and an app's
+# copy of these sources sits deep under windows/flutter/ephemeral/
+# .plugin_symlinks/, so a `..` segment can push a path over the limit.
+target_include_directories(${PLUGIN_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+
+# The object files go to a short folder of the build (`<binary dir>/iawv/<config>/`,
+# the binary dir being the app's build/windows/x64)
+# instead of `plugins/flutter_inappwebview_windows/
+# flutter_inappwebview_windows_plugin.dir/<config>/`, for the same limit. The
+# target's name cannot change (Flutter links `<package>_plugin`), so only the
+# objects' folder is moved, per source (VS_SETTINGS, CMake 3.18+).
+if(CMAKE_GENERATOR MATCHES "Visual Studio" AND NOT CMAKE_VERSION VERSION_LESS 3.18)
+  get_target_property(_iawv_sources ${PLUGIN_NAME} SOURCES)
+  file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/iawv/" _iawv_dir)
+  set_source_files_properties(${_iawv_sources} PROPERTIES
+    VS_SETTINGS "ObjectFileName=${_iawv_dir}$(Configuration)\\")
+  # MSBuild's file-tracking logs (`<target>.dir/<config>/<name>.tlog/`) would
+  # stay at the old depth; MSBuild only defaults TLogLocation when it is unset.
+  set_target_properties(${PLUGIN_NAME} PROPERTIES
+    VS_GLOBAL_TLogLocation "${_iawv_dir}$(Configuration)\\tlog\\")
+endif()
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 
 # List of absolute paths to libraries that should be bundled with the plugin.

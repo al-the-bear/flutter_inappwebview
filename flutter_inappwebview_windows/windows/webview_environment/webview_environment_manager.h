@@ -6,8 +6,8 @@
 #include <string>
 #include <winrt/base.h>
 
-#include "../flutter_inappwebview_windows_plugin.h"
-#include "../types/channel_delegate.h"
+#include "flutter_inappwebview_windows_plugin.h"
+#include "types/channel_delegate.h"
 #include "webview_environment.h"
 
 namespace flutter_inappwebview_plugin

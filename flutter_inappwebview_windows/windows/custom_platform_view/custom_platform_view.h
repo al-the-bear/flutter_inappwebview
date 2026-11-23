@@ -7,7 +7,7 @@
 
 #include <memory>
 
-#include "../in_app_webview/in_app_webview.h"
+#include "in_app_webview/in_app_webview.h"
 #include "graphics_context.h"
 #include "texture_bridge.h"
 

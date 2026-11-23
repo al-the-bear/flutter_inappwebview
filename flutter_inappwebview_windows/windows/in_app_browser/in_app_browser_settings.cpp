@@ -1,6 +1,6 @@
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/string.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/string.h"
 #include "in_app_browser_settings.h"
 
 #include "in_app_browser.h"

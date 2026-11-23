@@ -2,9 +2,9 @@
 
 #include "print_job_controller.h"
 #include "print_job_info.h"
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/string.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/string.h"
 
 namespace flutter_inappwebview_plugin
 {

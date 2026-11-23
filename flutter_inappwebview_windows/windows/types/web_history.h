@@ -4,7 +4,7 @@
 #include <flutter/standard_method_codec.h>
 #include <optional>
 
-#include "../utils/flutter.h"
+#include "utils/flutter.h"
 #include "web_history_item.h"
 
 namespace flutter_inappwebview_plugin

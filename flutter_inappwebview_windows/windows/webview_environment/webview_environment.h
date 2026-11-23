@@ -7,7 +7,7 @@
 #include <WebView2.h>
 #include <wil/com.h>
 
-#include "../flutter_inappwebview_windows_plugin.h"
+#include "flutter_inappwebview_windows_plugin.h"
 #include "webview_environment_channel_delegate.h"
 #include "webview_environment_settings.h"
 

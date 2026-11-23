@@ -1,6 +1,6 @@
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/strconv.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/strconv.h"
 #include "frame_info.h"
 
 #include <winrt/Windows.Foundation.h>

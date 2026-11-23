@@ -2,11 +2,11 @@
 #include <flutter/method_channel.h>
 #include <flutter/standard_method_codec.h>
 
-#include "../in_app_webview/in_app_webview_settings.h"
-#include "../utils/flutter.h"
-#include "../utils/log.h"
-#include "../utils/string.h"
-#include "../utils/vector.h"
+#include "in_app_webview/in_app_webview_settings.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
+#include "utils/string.h"
+#include "utils/vector.h"
 #include "webview_environment_manager.h"
 
 namespace flutter_inappwebview_plugin

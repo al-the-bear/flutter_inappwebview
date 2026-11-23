@@ -2,9 +2,9 @@
 
 #include "print_job_channel_delegate.h"
 #include "print_job_info.h"
-#include "../in_app_webview/in_app_webview.h"
-#include "../utils/flutter.h"
-#include "../utils/log.h"
+#include "in_app_webview/in_app_webview.h"
+#include "utils/flutter.h"
+#include "utils/log.h"
 
 #include <chrono>
 

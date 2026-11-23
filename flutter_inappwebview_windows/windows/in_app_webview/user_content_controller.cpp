@@ -1,9 +1,9 @@
 #include <nlohmann/json.hpp>
 #include <wil/wrl.h>
 
-#include "../utils/log.h"
-#include "../utils/string.h"
-#include "../utils/vector.h"
+#include "utils/log.h"
+#include "utils/string.h"
+#include "utils/vector.h"
 #include "in_app_webview.h"
 #include "user_content_controller.h"
 
